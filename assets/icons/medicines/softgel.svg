@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="240" height="240" style="--acc:#ffc81e;--acc-d:#e09400"><defs>
+  <radialGradient id="bk-shadow"><stop offset="0" stop-color="#16130c" stop-opacity=".28"/><stop offset="1" stop-color="#16130c" stop-opacity="0"/></radialGradient>
+  <linearGradient id="bk-gloss" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="bk-shade" x1="0" x2="0" y1="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient>
+  <linearGradient id="bk-shade-h" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".26"/></linearGradient>
+  <radialGradient id="bk-sheen" cx=".35" cy=".3" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".45" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></radialGradient>
+  <linearGradient id="bk-foil" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f4f6f9"/><stop offset=".45" stop-color="#d4d9e1"/><stop offset=".55" stop-color="#eef1f5"/><stop offset="1" stop-color="#b9c0cb"/></linearGradient>
+  <linearGradient id="bk-white" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#f6f3ec"/><stop offset="1" stop-color="#ddd8cc"/></linearGradient>
+  <linearGradient id="bk-amber" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#f0a04b"/><stop offset=".5" stop-color="#c46a17"/><stop offset="1" stop-color="#7e3c0b"/></linearGradient>
+  <linearGradient id="bk-metal" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#f1f3f6"/><stop offset=".5" stop-color="#aab1bc"/><stop offset="1" stop-color="#d6dbe2"/></linearGradient>
+  <linearGradient id="bk-screen" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#e9fbf1"/><stop offset="1" stop-color="#bfe8d2"/></linearGradient>
+  <linearGradient id="bk-ink" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#3a3322"/><stop offset="1" stop-color="#14110a"/></linearGradient></defs><ellipse cx="60" cy="106" rx="40" ry="7" fill="url(#bk-shadow)"/><g transform="translate(42 68) rotate(-28) scale(1)">
+      <ellipse rx="18" ry="11" style="fill:var(--acc)" fill-opacity=".93"/>
+      <ellipse rx="18" ry="11" fill="url(#bk-shade)"/>
+      <path d="M-18 0Q0 2.4 18 0" fill="none" style="stroke:var(--acc-d)" stroke-width="1" opacity=".4"/>
+      <ellipse cx="-4" cy="-4.6" rx="10" ry="3.2" fill="#fff" opacity=".75"/>
+      <ellipse cx="7" cy="4.5" rx="5" ry="1.8" fill="#fff" opacity=".3"/></g><g transform="translate(78 60) rotate(22) scale(1.12)">
+      <ellipse rx="18" ry="11" style="fill:var(--acc)" fill-opacity=".93"/>
+      <ellipse rx="18" ry="11" fill="url(#bk-shade)"/>
+      <path d="M-18 0Q0 2.4 18 0" fill="none" style="stroke:var(--acc-d)" stroke-width="1" opacity=".4"/>
+      <ellipse cx="-4" cy="-4.6" rx="10" ry="3.2" fill="#fff" opacity=".75"/>
+      <ellipse cx="7" cy="4.5" rx="5" ry="1.8" fill="#fff" opacity=".3"/></g><g transform="translate(60 90) rotate(-4) scale(1)">
+      <ellipse rx="18" ry="11" style="fill:var(--acc)" fill-opacity=".93"/>
+      <ellipse rx="18" ry="11" fill="url(#bk-shade)"/>
+      <path d="M-18 0Q0 2.4 18 0" fill="none" style="stroke:var(--acc-d)" stroke-width="1" opacity=".4"/>
+      <ellipse cx="-4" cy="-4.6" rx="10" ry="3.2" fill="#fff" opacity=".75"/>
+      <ellipse cx="7" cy="4.5" rx="5" ry="1.8" fill="#fff" opacity=".3"/></g></svg>

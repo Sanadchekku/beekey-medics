@@ -1,0 +1,12 @@
+{
+  "name": "beekey-medics",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Beekey Medics web app \u2014 medicines, online doctor consults and lab tests from a local partner network.",
+  "scripts": {
+    "start": "python3 -m http.server 5173",
+    "check": "node --check js/app.js && node --check js/partner.js && node --check js/hex.js && node --check js/store.js && node --check js/data.js && node --check js/icons.js && node --check js/icons-care.js",
+    "icons": "node scripts/export-icons.mjs"
+  }
+}

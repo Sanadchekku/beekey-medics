@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="240" height="240" style="--acc:#ff5c7a;--acc-d:#cc2a4a"><defs>
+  <radialGradient id="bk-shadow"><stop offset="0" stop-color="#16130c" stop-opacity=".28"/><stop offset="1" stop-color="#16130c" stop-opacity="0"/></radialGradient>
+  <linearGradient id="bk-gloss" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="bk-shade" x1="0" x2="0" y1="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient>
+  <linearGradient id="bk-shade-h" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".26"/></linearGradient>
+  <radialGradient id="bk-sheen" cx=".35" cy=".3" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".45" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></radialGradient>
+  <linearGradient id="bk-foil" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f4f6f9"/><stop offset=".45" stop-color="#d4d9e1"/><stop offset=".55" stop-color="#eef1f5"/><stop offset="1" stop-color="#b9c0cb"/></linearGradient>
+  <linearGradient id="bk-white" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#f6f3ec"/><stop offset="1" stop-color="#ddd8cc"/></linearGradient>
+  <linearGradient id="bk-amber" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#f0a04b"/><stop offset=".5" stop-color="#c46a17"/><stop offset="1" stop-color="#7e3c0b"/></linearGradient>
+  <linearGradient id="bk-metal" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#f1f3f6"/><stop offset=".5" stop-color="#aab1bc"/><stop offset="1" stop-color="#d6dbe2"/></linearGradient>
+  <linearGradient id="bk-screen" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#e9fbf1"/><stop offset="1" stop-color="#bfe8d2"/></linearGradient>
+  <linearGradient id="bk-ink" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#3a3322"/><stop offset="1" stop-color="#14110a"/></linearGradient></defs><ellipse cx="60" cy="107" rx="42" ry="7" fill="url(#bk-shadow)"/><path d="M42 71L59 79.5L42 88L25 79.5Z" fill="#fff"/>
+  <path d="M25 79.5L42 88L42 105L25 96.5Z" fill="#ece6d8"/>
+  <path d="M42 88L59 79.5L59 96.5L42 105Z" fill="#d6cebd"/>
+  <circle cx="35.2" cy="79.5" r="0.765" fill="#c9c0ac"/><circle cx="45.4" cy="77.8" r="0.765" fill="#c9c0ac"/><circle cx="40.3" cy="82.05" r="0.765" fill="#c9c0ac"/><circle cx="31.8" cy="89.7" r="0.765" fill="#c9c0ac"/><circle cx="36.9" cy="94.8" r="0.765" fill="#c9c0ac"/><circle cx="48.8" cy="89.7" r="0.765" fill="#c9c0ac"/><circle cx="52.2" cy="93.95" r="0.765" fill="#c9c0ac"/><path d="M70 83L83 89.5L70 96L57 89.5Z" fill="#fff"/>
+  <path d="M57 89.5L70 96L70 109L57 102.5Z" fill="#ece6d8"/>
+  <path d="M70 96L83 89.5L83 102.5L70 109Z" fill="#d6cebd"/>
+  <circle cx="64.8" cy="89.5" r="0.585" fill="#c9c0ac"/><circle cx="72.6" cy="88.2" r="0.585" fill="#c9c0ac"/><circle cx="68.7" cy="91.45" r="0.585" fill="#c9c0ac"/><circle cx="62.2" cy="97.3" r="0.585" fill="#c9c0ac"/><circle cx="66.1" cy="101.2" r="0.585" fill="#c9c0ac"/><circle cx="75.2" cy="97.3" r="0.585" fill="#c9c0ac"/><circle cx="77.8" cy="100.55" r="0.585" fill="#c9c0ac"/>
+    <g transform="translate(76 46) scale(2.1)"><path d="M0-14S-10-2.6-10 4a10 10 0 0 0 20 0C10-2.6 0-14 0-14z" style="fill:var(--acc)"/><path d="M0-14S-10-2.6-10 4a10 10 0 0 0 20 0C10-2.6 0-14 0-14z" fill="url(#bk-sheen)"/><ellipse cx="-4.6" cy="1" rx="1.8" ry="3.2" fill="#fff" opacity=".7"/></g>
+    <text x="77" y="58" text-anchor="middle" font-family="Bricolage Grotesque, system-ui, sans-serif" font-weight="800" font-size="11" fill="#fff">A1c</text>
+    <path d="M26 34Q26 40 32 40Q26 40 26 46Q26 40 20 40Q26 40 26 34Z" fill="#ffc81e"/></svg>
