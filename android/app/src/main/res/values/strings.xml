@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Beekey Medics</string>
+    <string name="title_activity_main">Beekey Medics</string>
+    <string name="package_name">com.beekey.medics</string>
+    <string name="custom_url_scheme">com.beekey.medics</string>
+</resources>

@@ -116,3 +116,23 @@ export function hexMapSVG({ customer, shop, rider, rings = 3, allShops = [], rou
     ${pin(customer, 'pin-home', '🏠 You')}
   </svg>`;
 }
+
+/* ───────── geography (all of India on one km grid) ─────────
+   Partners, customers and orders store x/y in km (x = east, y = south) from an origin in Kochi.
+   A sinusoidal projection keeps local distances accurate in every city, so the same hex search
+   works for every branch. */
+export const ORIGIN = { lat: 9.9816, lng: 76.2999 };
+const KM_LAT = 110.574, KM_LNG = 111.32, RAD = Math.PI / 180;
+export const fromLatLng = (lat, lng) => ({ x: (lng - ORIGIN.lng) * KM_LNG * Math.cos(lat * RAD), y: (ORIGIN.lat - lat) * KM_LAT });
+export function toLatLng(p) { const lat = ORIGIN.lat - p.y / KM_LAT; return [lat, ORIGIN.lng + p.x / (KM_LNG * Math.cos(lat * RAD))]; }
+export const inIndia = (lat, lng) => lat > 6.5 && lat < 35.8 && lng > 68 && lng < 97.5;
+
+/** Cities where Beekey has partners. A customer is served if a verified partner is within SERVICE_KM. */
+export const BRANCHES = [
+  { id: 'kochi', name: 'Kochi', lat: 9.9816, lng: 76.2999 },
+  { id: 'pune', name: 'Pune', lat: 18.5530, lng: 73.9410 },
+  { id: 'perinthalmanna', name: 'Perinthalmanna', lat: 10.9760, lng: 76.2255 },
+];
+export const SERVICE_KM = 15;
+for (const b of BRANCHES) Object.assign(b, fromLatLng(b.lat, b.lng));
+export const branchOf = (p) => BRANCHES.reduce((best, b) => (km(p, b) < km(p, best) ? b : best), BRANCHES[0]);

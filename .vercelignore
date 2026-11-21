@@ -1,0 +1,13 @@
+# Only the website is deployed; native app projects, tooling and database files stay out.
+android/
+ios/
+resources/
+scripts/
+supabase/
+deploy/
+www/
+node_modules/
+package.json
+package-lock.json
+capacitor.config.json
+assets/icons/

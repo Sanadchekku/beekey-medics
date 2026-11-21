@@ -1,3 +1,5 @@
+import { fromLatLng } from './hex.js';
+
 // Demo network data. In production this comes from the backend (partners onboarded via the Partner portal).
 // Locations are kilometre offsets (x = east, y = south) from the city centre so the hex grid math stays simple;
 // a real build would store lat/lng and index them with Uber's H3 library.
@@ -15,7 +17,7 @@ export const SPECIALTIES = [
   { id: 'dentistry', name: 'Dental', icon: '🦷', blurb: 'Tooth pain, gums & oral care' },
 ];
 
-export const DOCTORS = [
+const DOCTOR_SEED = [
   { id: 'd1', name: 'Dr. Anjali Menon', spec: 'general', exp: 9, fee: 299, rating: 4.8, reviews: 312, langs: ['English', 'Malayalam', 'Hindi'], qual: 'MBBS, MD (Internal Medicine)', avatar: '👩‍⚕️' },
   { id: 'd2', name: 'Dr. Rahul Varma', spec: 'general', exp: 6, fee: 249, rating: 4.6, reviews: 188, langs: ['English', 'Hindi', 'Tamil'], qual: 'MBBS', avatar: '👨‍⚕️' },
   { id: 'd3', name: 'Dr. Fathima Rasheed', spec: 'pediatrics', exp: 11, fee: 399, rating: 4.9, reviews: 421, langs: ['English', 'Malayalam'], qual: 'MBBS, DCH, MD (Pediatrics)', avatar: '👩‍⚕️' },
@@ -101,7 +103,7 @@ export const TESTS = [
 ];
 
 // Each lab sets its own price per test (partners compete on price inside the network).
-export const LABS = [
+const LAB_SEED = [
   { id: 'l1', name: 'HoneyComb Diagnostics', x: 1.2, y: -0.8, rating: 4.7, nabl: true, home: true,
     prices: { t1: 299, t2: 120, t3: 150, t4: 449, t5: 99, t6: 499, t7: 1499, t8: 2799, t9: 549, t10: 299, t11: 999, t12: 799, t13: 899, t14: 549, t15: 549, t16: 149 } },
   { id: 'l2', name: 'CityCare Labs', x: -2.1, y: 1.5, rating: 4.5, nabl: true, home: true,
@@ -115,7 +117,7 @@ export const LABS = [
 ];
 
 // Medical shops in the network. `out` lists medicine ids currently out of stock.
-export const SHOPS = [
+const SHOP_SEED = [
   { id: 's1', name: 'Bee Well Pharmacy', area: 'MG Road', x: 0.9, y: 0.4, rating: 4.7, out: ['m11'] },
   { id: 's2', name: 'Lifeline Medicals', area: 'Kaloor', x: -1.7, y: -1.1, rating: 4.5, out: ['m8', 'm18'] },
   { id: 's3', name: 'Apex Chemists', area: 'Palarivattom', x: 2.8, y: -2.0, rating: 4.6, out: [] },
@@ -123,15 +125,61 @@ export const SHOPS = [
   { id: 's5', name: 'Hive Health Store', area: 'Vyttila', x: 3.9, y: 3.1, rating: 4.8, out: ['m22'] },
   { id: 's6', name: 'Sri Ganesh Medicals', area: 'Kadavanthra', x: 0.2, y: 2.7, rating: 4.3, out: ['m7', 'm11', 'm16'] },
   { id: 's7', name: 'Family Medical Hall', area: 'Thrikkakara', x: -4.4, y: -2.9, rating: 4.5, out: [] },
+  // Pune branch
+  { id: 's8', name: 'Kharadi Wellness Pharmacy', area: 'Kharadi, Pune', ...fromLatLng(18.5532, 73.9405), rating: 4.6, out: [], city: 'pune' },
+  // Perinthalmanna branch (Malappuram, Kerala)
+  { id: 's9', name: 'Valluvanad Medicals', area: 'Ootty Road, Perinthalmanna', ...fromLatLng(10.9768, 76.2268), rating: 4.6, out: [], city: 'perinthalmanna' },
 ];
 
-export const DELIVERY = [
+const RIDER_SEED = [
   { id: 'r1', name: 'Arun K.', vehicle: 'Scooter · KL-07 AB 1234', x: 0.5, y: -0.3, phone: '+91 90000 11111' },
   { id: 'r2', name: 'Salman P.', vehicle: 'Bike · KL-07 CD 5678', x: -2.0, y: 1.0, phone: '+91 90000 22222' },
   { id: 'r3', name: 'Divya R.', vehicle: 'EV Scooter · KL-07 EF 9012', x: 2.5, y: 2.2, phone: '+91 90000 33333' },
+  // Pune branch (based in Viman Nagar, ~2.5 km from the Kharadi pharmacy)
+  { id: 'r4', name: 'Rohan S.', vehicle: 'Scooter · MH-12 XY 4321', ...fromLatLng(18.5640, 73.9190), phone: '+91 90000 44444', city: 'pune' },
+  // Perinthalmanna branch (based near the Pattambi Road junction, ~1.5 km from the pharmacy)
+  { id: 'r5', name: 'Faisal M.', vehicle: 'Bike · KL-53 G 7788', ...fromLatLng(10.9870, 76.2185), phone: '+91 90000 55555', city: 'perinthalmanna' },
 ];
 
 export const TIME_SLOTS = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '14:00', '14:30', '15:00', '15:30', '16:00', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'];
 export const LAB_SLOTS = ['06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '10:00', '11:00', '16:00', '17:00'];
 
-export const byId = (list, id) => list.find((x) => x.id === id);
+/* ───────── Partner network (admin-managed) ─────────
+   The admin panel can add, verify, suspend and remove partners. The network lives in the store;
+   these live arrays hold only VERIFIED partners, so customers never see unverified ones.
+   They are mutated in place so every module that imported them stays in sync. */
+export const DOCTORS = [];
+export const LABS = [];
+export const SHOPS = [];
+export const DELIVERY = [];
+export const NETWORK_KINDS = { doctor: DOCTORS, lab: LABS, shop: SHOPS, delivery: DELIVERY };
+const REGISTRY = new Map(); // every partner ever known, for old orders that reference removed ones
+
+export function seedNetwork() {
+  const joined = '2026-01-15';
+  const tag = (list) => list.map((x) => ({ ...x, status: 'verified', joined, verifiedOn: joined }));
+  return { doctor: tag(DOCTOR_SEED), lab: tag(LAB_SEED), shop: tag(SHOP_SEED), delivery: tag(RIDER_SEED) };
+}
+
+/** Adds seed partners that a saved network has never seen (e.g. a new branch). Removed partners stay removed. */
+export function migrateNetwork(net) {
+  const seed = seedNetwork();
+  let changed = false;
+  for (const kind of Object.keys(seed)) {
+    net[kind] ||= [];
+    for (const p of seed[kind]) if (!net[kind].some((x) => x.id === p.id)) { net[kind].push(p); changed = true; }
+  }
+  return changed;
+}
+
+export function syncNetwork(net) {
+  for (const [kind, live] of Object.entries(NETWORK_KINDS)) {
+    live.length = 0;
+    for (const p of net[kind] || []) {
+      REGISTRY.set(p.id, p);
+      if (p.status === 'verified') live.push(p);
+    }
+  }
+}
+
+export const byId = (list, id) => list.find((x) => x.id === id) || REGISTRY.get(id);

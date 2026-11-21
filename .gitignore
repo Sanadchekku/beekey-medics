@@ -3,4 +3,6 @@ node_modules/
 *.log
 .env
 .env.*
-_docs_preview.html
+
+# Native app builds (Capacitor)
+www/

@@ -3,7 +3,8 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { medArtFile, FORM_LABELS, TINTS } from '../js/icons.js';
 import { careArtFile, doctorAvatarFile, SPEC_IDS, LAB_IDS } from '../js/icons-care.js';
-import { SPECIALTIES, TEST_CATEGORIES, DOCTORS } from '../js/data.js';
+import { SPECIALTIES, TEST_CATEGORIES, seedNetwork } from '../js/data.js';
+const DOCTORS = seedNetwork().doctor;
 
 const root = new URL('../assets/icons/', import.meta.url);
 const write = (dir, name, svg) => { const d = new URL(dir + '/', root); mkdirSync(d, { recursive: true }); writeFileSync(new URL(name, d), svg); return `${dir}/${name}`; };

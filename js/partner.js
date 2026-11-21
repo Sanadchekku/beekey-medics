@@ -1,15 +1,13 @@
 // Partner dashboards: doctor, medical shop, delivery partner and lab.
 import { DOCTORS, MEDICINES, SHOPS, DELIVERY, LABS, TESTS, byId } from './data.js';
-import { store, now } from './store.js';
-import { hexMapSVG, km } from './hex.js';
-import { medArt } from './icons.js';
+import { store, now, customers } from './store.js';
+import { gpsStart, gpsStop, gpsSharing, gpsResume } from './livemap.js';
 import { doctorAvatar, labArt } from './icons-care.js';
 import {
   esc, inr, S, fmtDate, fmtTime, openModal, closeModal, toast, render, ROLES,
   createMedicineOrder, advanceOrder, showPrescription,
 } from './app.js';
 
-const users = () => { try { return JSON.parse(localStorage.getItem('beekey_users') || '{}'); } catch { return {}; } };
 const statusLabel = { placed: 'New order', accepted: 'Packing', ready: 'Awaiting rider', picked: 'Out for delivery', delivered: 'Delivered' };
 
 function shell(role, me, stats, body) {
@@ -92,7 +90,7 @@ function shopDash(me) {
     return `<div class="row-card card col">
       <div class="oc-top"><b>#${o.id}</b><span class="status s-${o.status}">${statusLabel[o.status]}</span></div>
       <p class="small">👤 ${esc(o.customer.name)} · 📍 ${o.distanceKm.toFixed(1)} km · placed ${fmtTime(o.createdAt)}</p>
-      <ul class="item-list">${o.items.map((i) => `<li>${medArt(byId(MEDICINES, i.id), 30)}${esc(i.name)} <b>× ${i.qty}</b>${me.out.includes(i.id) ? ' <span class="warn-tag">out of stock</span>' : ''}</li>`).join('')}${o.custom.map((i) => `<li>${esc(i.name)} <small class="muted">(typed by doctor — set price on bill)</small></li>`).join('')}</ul>
+      <ul class="item-list">${o.items.map((i) => `<li><img class="med-photo xs" src="assets/photos/products/${i.id}.webp" alt="" loading="lazy" />${esc(i.name)} <b>× ${i.qty}</b>${me.out.includes(i.id) ? ' <span class="warn-tag">out of stock</span>' : ''}</li>`).join('')}${o.custom.map((i) => `<li>${esc(i.name)} <small class="muted">(typed by doctor — set price on bill)</small></li>`).join('')}</ul>
       ${appt ? `<p class="small">📄 Prescribed by ${esc(byId(DOCTORS, appt.doctorId).name)} <button class="link" data-act="view-rx" data-id="${appt.id}">view</button></p>` : o.rxFile ? `<p class="small">📄 Customer uploaded: ${esc(o.rxFile)}</p>` : ''}
       ${rider ? `<p class="small">🛵 Rider: ${esc(rider.name)}</p>` : ''}
       <div class="oc-foot"><span>${inr(o.total)} · COD</span>
@@ -112,24 +110,32 @@ function shopDash(me) {
 
 /* ─────────────── Delivery partner ─────────────── */
 function deliveryDash(me) {
+  gpsResume(me.id);
   const mine = S().orders.filter((o) => o.riderId === me.id);
   const active = mine.filter((o) => o.status === 'ready' || o.status === 'picked');
   const done = mine.filter((o) => o.status === 'delivered');
+  const on = gpsSharing(me.id);
   const body = `
+    <div class="card gps-card ${on ? 'on' : ''}">
+      <span class="gps-ico">${on ? '📡' : '📍'}</span>
+      <div><b>Live location ${on ? 'sharing is ON' : 'sharing is off'}</b><p class="muted small" data-live="rgps:${me.id}"></p></div>
+      <button class="btn ${on ? 'btn-ghost' : 'btn-primary'}" data-act="gps-toggle" data-id="${me.id}">${on ? 'Stop sharing' : '📡 Share live location'}</button>
+    </div>
     <h2>Active deliveries</h2>
     <div class="row-list">${active.length ? active.map((o) => {
       const shop = byId(SHOPS, o.shopId);
       return `<div class="card deliver-card">
         <div class="deliver-info">
           <div class="oc-top"><b>#${o.id}</b><span class="status s-${o.status}">${statusLabel[o.status]}</span></div>
-          <div class="leg"><span class="leg-dot a"></span><div><small class="muted">PICK UP · ${km(me, shop).toFixed(1)} km from you</small><b>${esc(shop.name)}</b><p class="muted small">${esc(shop.area)}</p></div></div>
-          <div class="leg"><span class="leg-dot b"></span><div><small class="muted">DROP · ${o.distanceKm.toFixed(1)} km from shop</small><b>${esc(o.customer.name)}</b><p class="muted small">${esc(o.customer.address)}</p></div></div>
+          <div class="rnav"><b data-live="rnav:${o.id}"></b><span class="lc-eta"><small>ETA</small><b data-live="rnav-min:${o.id}"></b></span></div>
+          <div class="leg"><span class="leg-dot a"></span><div><small class="muted" data-live="rpick:${o.id}">PICK UP</small><b>${esc(shop.name)}</b><p class="muted small">${esc(shop.area)}</p></div></div>
+          <div class="leg"><span class="leg-dot b"></span><div><small class="muted" data-live="rdrop:${o.id}">DROP</small><b>${esc(o.customer.name)}</b><p class="muted small">${esc(o.customer.address)}</p></div></div>
           <p class="small">💵 Collect <b>${inr(o.total)}</b> cash · ${o.items.length + o.custom.length} item(s)</p>
           <div class="rc-actions">${o.status === 'ready'
             ? `<button class="btn btn-primary" data-act="p-advance" data-id="${o.id}">✔ Picked up from shop</button>`
             : `<a class="btn btn-ghost" href="tel:${esc(o.customer.phone)}">📞 Call customer</a><button class="btn btn-primary" data-act="p-advance" data-id="${o.id}">✔ Mark delivered</button>`}</div>
         </div>
-        <div class="deliver-map">${hexMapSVG({ customer: o.customer, shop, rider: me, rings: 0, routeActive: o.status === 'picked' })}</div>
+        <div class="deliver-map"><div class="live-map" data-livemap="rider:${me.id}:${o.id}"></div><small class="muted map-src" data-live="rnav-src:${o.id}"></small></div>
       </div>`;
     }).join('') : emptyDash('🛵', 'No active deliveries', 'When a pharmacy near you packs an order, you are auto-assigned by hex search and it appears here.')}</div>
     ${done.length ? `<h2>Completed today</h2><div class="row-list">${done.map((o) => `<div class="row-card card"><div class="rc-main"><span>✅</span><div><b>#${o.id} · ${esc(o.customer.name)}</b><p class="muted small">Delivered ${fmtTime(o.timeline.at(-1).at)}</p></div></div><span class="price">+ ₹30</span></div>`).join('')}</div>` : ''}`;
@@ -145,7 +151,9 @@ function labDash(me) {
     <div class="rc-main"><span class="test-icon">${labArt(byId(TESTS, b.testId).cat, 44)}</span><div><b>${esc(byId(TESTS, b.testId).name)}</b>
     <p class="muted small">👤 ${esc(b.patient.name)} · ${fmtDate(b.date)} ${b.slot} · ${b.home ? `🏠 ${esc(b.patient.address)}` : '🏥 Walk-in'}</p></div></div>
     <div class="rc-actions"><span class="price">${inr(b.price)}</span>
-      ${b.status === 'booked' ? `<button class="btn btn-sm btn-primary" data-act="lab-collect" data-id="${b.id}">Sample collected</button>` : ''}
+      ${b.status === 'booked' && b.home ? `<button class="btn btn-sm btn-primary" data-act="lab-enroute" data-id="${b.id}">🛵 Start home visit</button>` : ''}
+      ${b.status === 'enroute' ? '<span class="status s-picked">On the way</span>' : ''}
+      ${(b.status === 'booked' && !b.home) || b.status === 'enroute' ? `<button class="btn btn-sm btn-primary" data-act="lab-collect" data-id="${b.id}">Sample collected</button>` : ''}
       ${b.status === 'collected' ? `<button class="btn btn-sm btn-primary" data-act="lab-report" data-id="${b.id}">Upload report</button>` : ''}
       ${b.status === 'report' ? '<span class="status s-report">Report sent</span>' : ''}</div></div>`;
   const body = `
@@ -169,7 +177,11 @@ export function renderDashboard({ role }) {
   if (!partner || partner.role !== role) {
     return `<section class="wrap section"><div class="empty"><div class="empty-icon">${r.icon}</div><h3>${r.title} login required</h3><p class="muted">Login with your registered partner account to open this dashboard.</p><button class="btn btn-primary" data-act="partner-login" data-id="${role}">Login as ${r.title}</button></div></section>`;
   }
-  return DASH[role](byId(r.list, partner.id));
+  const me = byId(r.list, partner.id);
+  if (!me || me.status !== 'verified') {
+    return `<section class="wrap section"><div class="empty"><div class="empty-icon">⏸</div><h3>Account not active</h3><p class="muted">Your partner account is ${me ? (me.status === 'removed' ? 'removed' : 'awaiting verification or suspended') : 'not found'}. Please contact the Beekey team.</p><button class="btn btn-ghost" data-act="partner-logout">Log out</button></div></section>`;
+  }
+  return DASH[role](me);
 }
 
 export const partnerActions = {
@@ -178,6 +190,11 @@ export const partnerActions = {
     const o = S().orders.find((x) => x.id === id);
     const msg = { accepted: () => 'Order accepted — start packing', ready: () => `Rider ${byId(DELIVERY, o.riderId).name} assigned via hex search`, picked: () => 'Picked up — customer notified', delivered: () => 'Delivered! 🎉 +₹30' }[o.status];
     if (msg) toast(msg());
+    render();
+  },
+  'gps-toggle': ({ id }) => {
+    if (gpsSharing(id)) { gpsStop(); toast('Live location sharing stopped'); }
+    else if (gpsStart(id)) toast('📡 Sharing your live location — customers can follow you on the map');
     render();
   },
   'rx-open': ({ id }) => { rx = { apptId: id, items: [], custom: [], notes: '', file: '' }; rxModal(); },
@@ -202,7 +219,7 @@ export const partnerActions = {
     keepNotes();
     if (!rx.items.length && !rx.custom.length && !rx.file) return toast('Add at least one medicine or upload a prescription', 'warn');
     const a = S().appointments.find((x) => x.id === rx.apptId);
-    const patient = users()[a.patient.phone] || { id: a.userId, name: a.patient.name, phone: a.patient.phone, address: 'Address on file', x: 0.6, y: 0.6 };
+    const patient = customers.get(a.patient.phone) || { id: a.userId, name: a.patient.name, phone: a.patient.phone, address: 'Address on file', x: 0.6, y: 0.6 };
     const prescription = { items: rx.items.map(({ name, dose, days }) => ({ name, dose, days })), custom: rx.custom, notes: rx.notes.trim(), file: rx.file, at: now() };
     let orderId = null, msg = 'Prescription sent to patient';
     if (rx.items.length || rx.custom.length) {
@@ -215,6 +232,10 @@ export const partnerActions = {
     closeModal();
     toast(msg);
     render();
+  },
+  'lab-enroute': ({ id }) => {
+    store.set(({ labBookings }) => ({ labBookings: labBookings.map((b) => (b.id === id ? { ...b, status: 'enroute', enrouteAt: now() } : b)) }));
+    toast('Patient notified — they can track you live on the map'); render();
   },
   'lab-collect': ({ id }) => {
     store.set(({ labBookings }) => ({ labBookings: labBookings.map((b) => (b.id === id ? { ...b, status: 'collected' } : b)) }));

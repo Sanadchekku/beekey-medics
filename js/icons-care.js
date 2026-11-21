@@ -237,7 +237,7 @@ export const LOOKS = {
 const SPEC_TINT = Object.fromEntries(Object.entries(SPEC).map(([k, v]) => [k, v[0]]));
 
 export function doctorAvatar(d, size = 76, cls = 'doc-art') {
-  const [g, style, si, hi, glasses, beard] = LOOKS[d.id] || ['m', 'short', 2, 0];
+  const [g, style, si, hi, glasses, beard] = LOOKS[d.id] || d.look || ['m', 'short', 2, 0];
   const skin = SKIN[si], hair = HAIR[hi];
   const [acc, accD] = T[SPEC_TINT[d.spec] === 'bear' ? 'orange' : SPEC_TINT[d.spec] || 'honey'];
   const hijab = style === 'hijab' ? '#4f7a8c' : null;

@@ -3,10 +3,38 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Beekey Medics web app \u2014 medicines, online doctor consults and lab tests from a local partner network.",
+  "description": "Beekey Medics web app — medicines, online doctor consults and lab tests from a local partner network.",
   "scripts": {
     "start": "python3 -m http.server 5173",
-    "check": "node --check js/app.js && node --check js/partner.js && node --check js/hex.js && node --check js/store.js && node --check js/data.js && node --check js/icons.js && node --check js/icons-care.js",
-    "icons": "node scripts/export-icons.mjs"
+    "check": "for f in js/*.js; do node --check $f || exit 1; done && echo 'JS OK'",
+    "icons": "node scripts/export-icons.mjs",
+    "build:www": "node scripts/build-www.mjs",
+    "cap:sync": "npm run build:www && npx cap sync",
+    "android": "npm run cap:sync && npx cap open android",
+    "android:run": "npm run cap:sync && bash scripts/emulator.sh && npx cap run android --target $(adb devices | awk '/^emulator-/{print $1; exit}' || echo emulator-5554)",
+    "android:apk": "npm run cap:sync && cd android && ./gradlew assembleDebug",
+    "android:bundle": "npm run cap:sync && cd android && ./gradlew bundleRelease",
+    "ios": "npm run cap:sync && npx cap open ios",
+    "app:assets": "npx capacitor-assets generate --ios --android --assetPath resources --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#0e1420' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#0e1420'",
+    "emulator": "bash scripts/emulator.sh",
+    "db:start": "supabase start -x studio,imgproxy,edge-runtime,logflare,vector,mailpit,storage-api,postgres-meta,supavisor",
+    "db:stop": "supabase stop",
+    "db:seed-sql": "node scripts/gen-seed.mjs",
+    "db:reset": "supabase db reset"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/core": "^8.6.2",
+    "@capacitor/geolocation": "^8.2.5",
+    "@capacitor/ios": "^8.6.2",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
+    "@supabase/supabase-js": "^2.119.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
+    "@capacitor/cli": "^8.6.2",
+    "lightningcss": "^1.33.0",
+    "supabase": "^3.2.0"
   }
 }
