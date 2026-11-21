@@ -8,8 +8,8 @@
 // Moving to your own Ubuntu server later? Point supabaseUrl at your self-hosted Supabase.
 
 export const CONFIG = {
-  supabaseUrl: '',
-  supabaseAnonKey: '',
+  supabaseUrl: 'https://bzjfontqkwgkulceqsnu.supabase.co',
+  supabaseAnonKey: 'sb_publishable_Mbnj12r2GqeQzgzs4vvcvQ_ZJNIzZdV',
 
   // Client-testing helpers: "▶ Simulate next step", "Reset demo data", demo OTP 1234 hints.
   // Set to false for the public launch (after real SMS OTP is connected).
